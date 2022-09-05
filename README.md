@@ -1,1 +1,2 @@
-# Location-Script
+# iTOTEM Location Module
+
