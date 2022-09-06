@@ -85,6 +85,56 @@ ___
 As using ```fastDamerauLevenshtein``` requires an extra install, which may indicate the library is becoming deprecated and that I was unable to verify that the weighting was actually implement by assigning a multiplier to each distance in the recursion because the code is not open source, when improving the script I recommend trying to find an alternative for this library. 
 ___
 
+### Sequence based metrics:
+Sequence based similarities search for the longest common sequence within both strings and typically return a greater value the greater the number of common sequences found. The difference between a substring and a subsequence is that the characters in a substring need to be contiguous, whereas the characters within a subsequence do not. However, in both the character order does matter, differentiating the similarity from token-based similarities.  
+
+
+The Regular Expression module used is Python's built-in [re](https://www.w3schools.com/python/python_regex.asp) package. The module is used to check how many common substrings from the input string exist in the comparison string. The module is used in combination with the [SequenceMatcher class from the difflib library](https://docs.python.org/3/library/difflib.html), which itself states that it functions differently than the Ratcliff/Obershelp algorithm. The intention behind combining the re module and the SequenceMatcher class was to create a variation the Ratcliff/Obershelp algorithm that does not [check exclusively for matches on the right or left side of the common substring](https://en.wikipedia.org/wiki/Gestalt_Pattern_Matching#Algorithm).
+
+```seqMatch``` is created as ```SequenceMatcher``` object, with ```None``` passed in for the ```isjunk``` parameter, and copies of ```string_one``` and ```string_two``` are passed as ```a``` and ```b```. While the official documentation say that the argument is optional, omitting it resulted in an ```IndexError: string index out of range``` error.  This is based off code from [SequenceMatcher in Python for Longest Common Substring](https://www.geeksforgeeks.org/sequencematcher-in-python-for-longest-common-substring/)
+
+```python
+seqMatch = SequenceMatcher(None, regEx_string_one, regEx_string_two)
+```
+
+A match is then searched for and stored in ```match``` using the ```find_longest_match``` function. While a match exists within both strings, the search continues and the number of characters within the second string that belong to the matching substring are stored in ```len_regEx_character_matches```, and the matching substring is then removed so the search can continue:
+
+```python
+while (match.size != 0):
+  #  .a is the starting index of the match and .size is the length of the matching string
+  sub_string_match = regEx_string_one[match.a: match.a + match.size]
+  num_regEx_matches = len(re.findall(sub_string_match, regEx_string_two))
+  len_regEx_character_matches = (len_regEx_character_matches + num_regEx_matches * len(sub_string_match))
+  regEx_string_one = regEx_string_one.replace(sub_string_match, '')
+  regEx_string_two = regEx_string_two.replace(sub_string_match, '')
+  match = seqMatch.find_longest_match(0, len(regEx_string_one), 0, len(regEx_string_two))
+```
+
+```regEx_ratio``` is then just set to the number of matching substring characters over the total length of the second string and is assigned a final weighting: 
+
+```python
+regEx_ratio = (len_regEx_character_matches) / len(string_two)
+regEx_weight = 0.2
+regEx_ratio = regEx_ratio * regEx_weight
+```
+
+The other library used for sequence similarity is [TextDistance](https://pypi.org/project/textdistance/), which contains algorithms for various string metrics.  
+
+All three sequece based algorithms from the library can be used, however the Regular Expression and SequenceMatcher algorithm may already cover sequence-based distances. Regardless, code implementing the algorithms is included and the weighting given is just set to zero. 
+
+```python
+sequence_ratio = textdistance.lcsseq.normalized_similarity(string_one, string_two)
+``` 
+
+Returns a value equal to ```1 - (the length of the longest input string - length of the longest common subsequence)/length of the common subsequence```
+
+Similarly:
+
+```python
+substring_ratio = textdistance.lcsstr.normalized_similarity(string_one, string_two)
+```
+
+Returns a value equal to ```1 - (the length of the longest input string - length of the longest common substring)/length of the common substring```
 
 
 ## CAPP string metric weighting
