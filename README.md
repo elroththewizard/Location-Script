@@ -194,7 +194,7 @@ https://www.baeldung.com/cs/string-similarity-token-methods
 https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance  
 ## Next steps:
 1. "Hunter's rules" - common abbreviations and database clean up - see clean string
-2. Adding geocoding functionality: https://pypi.org/project/pgeocode https://developers.google.com/maps/documentation/geocoding/start#:~:text=The%20Geocoding%20API%20is%20a,Client%20for%20Google%20Maps%20Services (separate API key)
+2. Access longitude and latidue from json results and implement more libraries: https://pypi.org/project/pgeocode https://developers.google.com/maps/documentation/geocoding/start#:~:text=The%20Geocoding%20API%20is%20a,Client%20for%20Google%20Maps%20Services (separate API key)
 3. Develop list of weights for use case and keep testing the string metric function
 4. Use mapping table as PostalCodeDatabase.csv input for verify_location
 5. Create an accurate price estimate: https://developers.google.com/maps/billing-and-pricing/billing#billing-overview
