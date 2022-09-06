@@ -136,6 +136,29 @@ substring_ratio = textdistance.lcsstr.normalized_similarity(string_one, string_t
 
 Returns a value equal to ```1 - (the length of the longest input string - length of the longest common substring)/length of the common substring```
 
+The final sequence-based algorithm from the ```textdistance``` module is the ```ratcliff_obershelp``` similarity. As mentioned above, the ```ratcliff_obershelp``` similarity [checks exclusively for matches on the right or left side of the common substring after removing the common substring from the string](https://en.wikipedia.org/wiki/Gestalt_Pattern_Matching#Algorithm) based on the formula:
+
+![](https://wikimedia.org/api/rest_v1/media/math/render/svg/97592a38a8687e4a86309ad559f31bc0369cf977)
+
+And returns a value between 0 and 1 equal to: ```(2 * the number of matching characters)/(total number of characters within both strings)```, where ```number of matching characters``` is equal to ```the longest common substring, plus recursively the number of matching characters in the non-matching regions on both sides of the longest common substring (matching characters on the left and right)```.
+
+This means that ```string_one = technolgies itotem``` and ```string_two = itotem technolgies``` would only return ```0.6111111111111112```. 
+
+Much like the ```Jaro–Winkler similarity``` applied to the ```edit ratio```, the Ratcliff-Obershelp similarity should be given a higher weighting if we are prioritizing company names that have a common prefix whose substrings are in the same order.  
+
+### Token based metrics:
+The final type of string metric used is a token-based algorithm from the ```textdistance``` module, the [Jaccard index](https://en.wikipedia.org/wiki/Jaccard_index). Token-based distances use a set of tokens as input instead of complete strings and find the number of similar tokens within both sets. The greater the number of common tokens, the greater the similarity. The Jaccard index works using this formula: 
+
+![](https://miro.medium.com/max/406/1*wDOEGSMvUMzHGC45tgLAcw.png)
+
+Where the number of common tokens is divided by the number of unique tokens, which is also equal to the number of common tokens divided by the length of the two strings minus the common tokens. Essentially, the way the Jaccard index is being used here is just finding the number of common characters between two strings, so: 
+
+```python
+textdistance.jaccard("technolgies itotem","itotem technolgies")
+```
+Returns ```1.0```.
+
+The reason why the Jaccard index was chosen as the token based metric is because according to the article [String similarity — the basic know your algorithms guide!](https://itnext.io/string-similarity-the-basic-know-your-algorithms-guide-3de3d7346227)
 
 ## CAPP string metric weighting
 
