@@ -23,15 +23,18 @@ return final_ratio
 
 When comparing strings, it is important to note that metrics are assumed to be case sensitive, so ```iTOTEM Technologies``` and ```itotem technologies``` would not return ```1.0```. Therefore, when using the ```string_metric``` algorithm, both strings are cleaned using the ```clean_string``` function from the module.  
 
-The function makes uses of separate, pre-existing string metric libraries for each type, which are character/edit based, sequence based and token-based distances, in addition to Python's built in ```re``` and ```difflib``` modules. Because overall time for the algorithm was not a consideration (i.e., the script would be left to run overnight), when deciding upon libraries for each individual type of metric, focus was given to fulfilling specific criteria needed to allow the metrics to be as dynamic as possible.  
+The function makes uses of separate, pre-existing string metric libraries for each type, which are character/edit based, sequence based and token-based distances, in addition to Python's built in [```re```](https://docs.python.org/3/library/re.html) and [```difflib```](https://docs.python.org/3/library/difflib.html) modules. Because overall time for the algorithm was not a consideration (i.e., the script would be left to run overnight), when deciding upon libraries for each individual type of metric, focus was given to fulfilling specific criteria needed to allow the metrics to be as dynamic as possible.  
 
 ### Edit metric:
 
 The character/edit based metric chosen was the Damerau-Levenshtein distance and the library used is ```fastDamerauLevenshtein```. The library was chosen because of its ability to assign different weightings to each type of edit operation. Edit distances are traditionally defined by counting the minimum number of operations required to transform one string into the other, and the Damerau–Levenshtein distance includes the operations insertion, deletion, substitution, and transposition (swapping).  
 
-The [formal mathematic definition of the Damerau–Levenshtein distance]([Damerau–Levenshtein distance - Wikipedia](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance#Definition)) is expressed as:  
+The [formal mathematic definition of the Damerau–Levenshtein distance](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance#Definition) is expressed as:  
 ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/d50fab8cc0233e2b1b5b420f72cb23fdf1d56c59)
 
+The final number returned by the Damerau–Levenshtein distance can be found by [uing the piecewise function formula from above in a matrix](https://medium.com/@ethannam/understanding-the-levenshtein-distance-equation-for-beginners-c4285a5604f0)[and selecting the value in the bottom right corner](https://www.lemoda.net/text-fuzzy/damerau-levenshtein/index.html)
+
+![](https://www.lemoda.net/text-fuzzy/damerau-levenshtein/damlev-infin.png)
 
 ## CAPP string metric weighting
 
