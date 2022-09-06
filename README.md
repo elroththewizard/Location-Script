@@ -136,7 +136,7 @@ substring_ratio = textdistance.lcsstr.normalized_similarity(string_one, string_t
 
 Returns a value equal to ```1 - (the length of the longest input string - length of the longest common substring)/length of the common substring```
 
-The final sequence-based algorithm from the ```textdistance``` module is the ```ratcliff_obershelp``` similarity. As mentioned above, the ```ratcliff_obershelp``` similarity [checks exclusively for matches on the right or left side of the common substring after removing the common substring from the string](https://en.wikipedia.org/wiki/Gestalt_Pattern_Matching#Algorithm) based on the formula:
+The final sequence-based algorithm from the ```textdistance``` module is the [```ratcliff_obershelp``` similarity](https://en.wikipedia.org/wiki/Gestalt_Pattern_Matching). As mentioned above, the ```ratcliff_obershelp``` similarity [checks exclusively for matches on the right or left side of the common substring after removing the common substring from the string](https://en.wikipedia.org/wiki/Gestalt_Pattern_Matching#Algorithm) based on the formula:
 
 ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/97592a38a8687e4a86309ad559f31bc0369cf977)
 
@@ -158,8 +158,44 @@ textdistance.jaccard("technolgies itotem","itotem technolgies")
 ```
 Returns ```1.0```.
 
-The reason why the Jaccard index was chosen as the token based metric is because according to the article [String similarity — the basic know your algorithms guide!](https://itnext.io/string-similarity-the-basic-know-your-algorithms-guide-3de3d7346227)
+The reason why the Jaccard index was chosen as the token based metric is due to its popularity and accessible formula, and because according to the article [String similarity — the basic know your algorithms guide!](https://itnext.io/string-similarity-the-basic-know-your-algorithms-guide-3de3d7346227), the other popular token-based metric, the Sørensen–Dice coefficient, will always overestimate the similarity between two strings because it's denominator is the total number of tokens, not the total number of unique tokens. 
 
-## CAPP string metric weighting
+### A quick summary of the different use cases for each string metric when determining the weighting is as follows:
 
+**Edit distance**:  Higher weighting when we want the strings to be nearly identical 
+
+**Regular expression**: Higher weighting when we want the strings to be nearly identical, i.e., more common substrings **
+
+**Longest common subsequence/substring**: Higher weighting when we want to prioritize the longest common subsequence/substring and don’t necessarily need the strings to be completely identical 
+
+**Ratcliff/Obershelp**: Higher weighting when we want the strings to be identical, including order  
+
+**Token**: Higher weighting when we want to prioritize the length of the strings matching and don’t necessarily need the strings to be completely identical 
+
+## Example CAPP string metric weighting
+
+Sources:
+https://www.w3schools.com/python/python_regex.asp  
+https://www.baeldung.com/cs/fuzzy-search-algorithm
+https://www.baeldung.com/cs/string-similarity-edit-distance 
+https://www.kdnuggets.com/2019/01/comparison-text-distance-metrics.html 
+https://www.baseclass.io/newsletter/jaro-winkler  
+https://www.learndatasci.com/glossary/jaccard-similarity/#:~:text=The%20Jaccard%20similarity%20measures%20the,of%20observations%20in%20either%20set.
+https://en.wikipedia.org/wiki/Tf%E2%80%93idf
+https://en.wikipedia.org/wiki/Cosine_similarity
+https://en.wikipedia.org/wiki/Jensen%E2%80%93Shannon_divergence
+https://en.wikipedia.org/wiki/String_metric
+https://pypi.org/project/python-Levenshtein/ 
+https://maxbachmann.github.io/Levenshtein
+https://en.wikipedia.org/wiki/Edit_distance  
+https://en.wikipedia.org/wiki/String_metric  
+https://www.baeldung.com/cs/string-similarity-sequence-based   
+https://www.baeldung.com/cs/string-similarity-token-methods 
+https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance  
 ## Next steps:
+1. "Hunter's rules" - common abbreviations and database clean up - see clean string
+2. Adding geocoding functionality: https://pypi.org/project/pgeocode https://developers.google.com/maps/documentation/geocoding/start#:~:text=The%20Geocoding%20API%20is%20a,Client%20for%20Google%20Maps%20Services (separate API key)
+3. Develop list of weights for use case and keep testing the string metric function
+4. Use mapping table as PostalCodeDatabase.csv input for verify_location
+5. Create an accurate price estimate: https://developers.google.com/maps/billing-and-pricing/billing#billing-overview
+6. Jessica's function: 
