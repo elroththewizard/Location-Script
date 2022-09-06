@@ -198,4 +198,4 @@ https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
 3. Develop list of weights for use case and keep testing the string metric function
 4. Use mapping table as PostalCodeDatabase.csv input for verify_location
 5. Create an accurate price estimate: https://developers.google.com/maps/billing-and-pricing/billing#billing-overview
-6. Jessica's function: 
+6. Create UI for QAin process - ideally get to the point where the weighting could be changed from the UI by non programmers
