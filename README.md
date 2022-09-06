@@ -83,7 +83,7 @@ edit_ratio = edit_ratio * edit_weight
 ___
 ### NOTE:
 As using ```fastDamerauLevenshtein``` requires an extra install, which may indicate the library is becoming deprecated and that I was unable to verify that the weighting was actually implement by assigning a multiplier to each distance in the recursion because the code is not open source, when improving the script I recommend trying to find an alternative for this library. 
-
+___
 
 
 
