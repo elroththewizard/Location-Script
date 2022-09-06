@@ -32,7 +32,7 @@ The character/edit based metric chosen was the Damerau-Levenshtein distance and 
 The [formal mathematic definition of the Damerau–Levenshtein distance](https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance#Definition) is expressed as:  
 ![](https://wikimedia.org/api/rest_v1/media/math/render/svg/d50fab8cc0233e2b1b5b420f72cb23fdf1d56c59)
 
-The final number returned by the Damerau–Levenshtein distance can be found by [uing the piecewise function formula from above in a matrix](https://medium.com/@ethannam/understanding-the-levenshtein-distance-equation-for-beginners-c4285a5604f0)[and selecting the value in the bottom right corner](https://www.lemoda.net/text-fuzzy/damerau-levenshtein/index.html)
+The final number returned by the Damerau–Levenshtein distance can be found by [uing the piecewise function formula from above in a matrix](https://medium.com/@ethannam/understanding-the-levenshtein-distance-equation-for-beginners-c4285a5604f0)[ and selecting the value in the bottom right corner](https://www.lemoda.net/text-fuzzy/damerau-levenshtein/index.html)
 
 ![](https://www.lemoda.net/text-fuzzy/damerau-levenshtein/damlev-infin.png)
 
