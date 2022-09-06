@@ -314,3 +314,32 @@ https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
 4. Use mapping table as PostalCodeDatabase.csv input for verify_location
 5. Create an accurate price estimate: https://developers.google.com/maps/billing-and-pricing/billing#billing-overview
 6. Create UI for QAin process - ideally get to the point where the weighting could be changed from the UI by non programmers
+
+
+
+#Sources and rules for for clean_str endings::--------------------------------
+#1: https://www.incorporate.ca/standard-british-columbia-incorporations
+#Limited -> Ltd.
+#Incorporated -> Inc.
+#Corporation -> Corp.
+#2: https://www.irs.gov/businesses/small-businesses-self-employed/limited-liability-company-llc
+#Limited Liability Company -> LLC
+#3:https://financial-dictionary.thefreedictionary.com/LP
+#Limited Partnership -> LP
+#4: https://dictionary.cambridge.org/dictionary/english/mfg
+#Manufacturing -> Mfg.
+#5: https://www.acronymfinder.com/Business/ENT.html
+#Ent. -> Enterprise (Ent. does not seem to be commonly used)
+#6: https://en.wikipedia.org/wiki/General_partnership, https://cpgconnect.ca/company-profiles/company-info/Saputo-Dairy-Products-Canada-G.P./603 
+#(General Partner) Gp -> G.P.
+#7: https://www.dnb.com/business-directory/company-profiles.cenosco_custom_bv.43bd3a6b001776a3dbe07a352af5b45a.html 
+#(besloten vennootschap) BV -> B.V.
+#Misc: Colleen
+#Grp -> Group
+#Svcs -> Services
+#Co -> Co.
+#EMP -> Employee
+#(CPLP) could be a COFI thing, the only ending I am unsure about
+dba -  doing business as: only include strings after this keyword oa - operating assests: only include strings after this keyword alberta ltd: only include strings after this keyword - a bit tricky ASK &: turn into 'and' ASK why oa - operating assests: everything before as well? See allpipe services oa 1041084 alberta ASK ltd ma - remove this string inc po - remove this string ulc - keeping it for now but I will ASK inc qc po - remove this string lp - keeping for now inc ma - remove this string llp - keeping for now "a div of" - keep for now a division of - keep for now svs keep for now div uap - keep for now ASK ltd rock oa - operating assests: remove itself and everything afterwards ltd glenn carlson' - keeping it for now ASK ltd 114027 alberta - removing everything after 'ltd' ASK corp po - keeping for now ASK ab ltd - only strings after this keyword
+#--------------------------------------------------------------------------
+
