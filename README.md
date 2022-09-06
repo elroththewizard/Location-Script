@@ -1,3 +1,118 @@
+# iTOTEM Location Module Documentation
+
+The module contains functions for various location validation use cases.
+
+## Google Search
+
+The ```google_search``` function takes in a ```company name```, ```location```, ```region``` and Google Places API Text Search ```next_page_token```, all as strings. The function makes use of the [Google Maps Platform Text Search](https://developers.google.com/maps/documentation/places/web-service/search-text) from the Places API, and requires an API key to be generated from the Google Cloud console. (Note that Google recommends storing the API on the cloud)
+
+Each string the function takes in as a parameter is used within the HTTP URL like so: 
+```https://maps.googleapis.com/maps/api/place/textsearch/output?parameters```
+
+```location```, ```company_name``` and ```region``` are all used within the initial request like so:
+```python
+user_input = company_name + "%20" + location + location_bias + "&key=" + KEY
+url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + user_input
+```
+Any ```&``` characters within ```company_name``` are converted to the string ```and```, as ```&``` is used to separate query elements. Alternatively, the encoding ```%24``` could also be used as an escape character. 
+
+The location bias variable passes in a set of longitude and latitude coordiantes and and a radius expressed in meters, which is accessed if the ```region``` string passed in exists within the ```region_lat_long``` dictionary, for example:
+```python
+region_lat_long['bc'] = "&location=53.7267%2C-127.6476&radius=1200000"
+region = 'bc'
+if region in region_lat_long:
+  location_bias = region_lat_long[region]
+```
+Spaces within ```company_name``` and ```location``` are replaced with the encoding ```%20``` for the URL. 
+
+When using the ```google_search``` function, in order to obtain the maximum results possible from the Places API, the function must be called multiple times, with the ```location``` parameter modified each call to include new and different information. 
+
+For example with:
+
+```python
+company_name = "iTOTEM"
+postal_code = "V7M 3N3"
+location = "North Vancouver"
+region = "bc"
+```
+
+```location``` would have to once be run as just ```North Vancouver```, then ```North Vancouver bc```, then ```North Vancouver bc V7M 3N3```, and then this would be repeated with ```bc``` as ```british columbia``` instead.
+
+It is also important to note that the registrey containing the result from the Google Places API is different than the registrey containing the results of a manual Google search via a web browser. 
+
+The API results are formatted and returned as a json request:
+```python
+response = requests.get(url)
+json_response = response.json()
+```
+```python
+{'html_attributions': [], 'results': [{'business_status': 'OPERATIONAL', 'formatted_address': '124 W 1st St #102, North Vancouver, BC V7M 3N3, Canada', 'geometry': {'location': {'lat': 49.31251229999999, 'lng': -123.0796238}, 'viewport': {'northeast': {'lat': 49.31378947989271, 'lng': -123.0783167701073}, 'southwest': {'lat': 49.31108982010727, 'lng': -123.0810164298927}}}, 'icon': 'https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png', 'icon_background_color': '#7B9EB0', 'icon_mask_base_uri': 'https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet', 'name': 'Itotem Technologies', 'place_id': 'ChIJqw6BiUxwhlQRnqbXPeGRucM', 'plus_code': {'compound_code': '8W7C+25 North Vancouver, British Columbia', 'global_code': '84XR8W7C+25'}, 'rating': 0, 'reference': 'ChIJqw6BiUxwhlQRnqbXPeGRucM', 'types': ['point_of_interest', 'establishment'], 'user_ratings_total': 0}], 'status': 'OK'}
+```
+And the results are accessed with the key:
+```python
+results = json_response['results']
+```
+```python
+[{'business_status': 'OPERATIONAL', 'formatted_address': '124 W 1st St #102, North Vancouver, BC V7M 3N3, Canada', 'geometry': {'location': {'lat': 49.31251229999999, 'lng': -123.0796238}, 'viewport': {'northeast': {'lat': 49.31378947989271, 'lng': -123.0783167701073}, 'southwest': {'lat': 49.31108982010727, 'lng': -123.0810164298927}}}, 'icon': 'https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png', 'icon_background_color': '#7B9EB0', 'icon_mask_base_uri': 'https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet', 'name': 'Itotem Technologies', 'place_id': 'ChIJqw6BiUxwhlQRnqbXPeGRucM', 'plus_code': {'compound_code': '8W7C+25 North Vancouver, British Columbia', 'global_code': '84XR8W7C+25'}, 'rating': 0, 'reference': 'ChIJqw6BiUxwhlQRnqbXPeGRucM', 'types': ['point_of_interest', 'establishment'], 'user_ratings_total': 0}]
+```
+
+The results are then iterated through and numbered and saved in a list ```search_matches``` 
+```python
+for i in enumerate(results):
+  iteration = i[0]
+  name = (results[iteration])['name']
+  formatted_address = (results[iteration])['formatted_address']
+  formatted_address = str(formatted_address)
+  formatted_address = formatted_address.replace('{', '')
+  formatted_address = formatted_address.replace('}', '')
+  search_matches.append("Result " + str(iteration + 1) + ". " + name + "," + formatted_address)
+```
+For API searches where there are more than 20 results, the json request returns a ```next_page_token```, which looks like:
+```python
+'next_page_token': 'AeJbb3cFAPZ--HJgV37WCas2vzMoz_z0MZKNldkBUm1-_dPBGGwY2urEoWBIE0Y0xSfBqa1TPMnbUaDQ0jbGMLN3vsbke2PqFF7lrmMjSbI0_iE97rusKWxuvRMhZdzHEJalmE9_RBaYZ--nfyf3SnibbJ2Ad93fHh9fpCbb7EUwy_nc47qmDUG1KnElzFKI8e47cFK9g6uf0L83wLz9_RfplBaYaQWOKaNyewewoqHdVYjh5NJCZJKekN_VBdDY7q-HyKX_lptluyrBm9sldk0Q2mzd9NS0mTFvo9rEFXKLzPCsjf8JkLRmaPjWL6lKD2O-KwR5yb7_kY8JBYoKstKPG6ugMmQSLr411Pe3UcO7zOJsNK5pgu8EDZ7Vl-FSqxxokY3zaMHRV6tA3m6UsBfn8LOvOiIIXoBrT0Bky2QV09CBHs7ehnGDWS5JrHc5hT8FCTig644biFwWCxdP3vYISQlWgQ'
+```
+And is used in the url as:
+```python
+url = "https://maps.googleapis.com/maps/api/place/textsearch/json?pagetoken=" + next_page_token + "&key=" + KEY
+```
+
+The ```try``` block continues to check for the ```next_page_token``` is it exists and appends the additional results to the original list:
+```python
+    try:
+        next_page_token = json_response['next_page_token']
+        token_status = True
+        result_num = len(search_matches)
+        while token_status is True:
+            if next_page_token is not None: 
+                time.sleep(5)  # Needed for API search cool down
+                additional_results = google_search('', '', '', next_page_token)
+                search_matches.append({'next_page_token': next_page_token})
+                for x in additional_results:
+                    if 'Result' in x:
+                        period_index = x.find('.')
+                        result_num = result_num + 1
+                        x = x.replace(x[7:period_index], str(result_num))
+                        search_matches.append(x)
+                    else:
+                        search_matches.append(x)
+                next_page_token = (search_matches[-1])['next_page_token']
+            else:
+                token_status = False
+        return search_matches
+```
+
+The ```time.sleep(5)``` is needed for the API to have time to generate the additional results
+
+If the ```next_page_token``` is ```None``` during the first check, a ```KeyError``` is given, which we catch with the ```except``` block:
+```python
+    except KeyError:
+        next_page_token = None
+        search_matches.append({'next_page_token': next_page_token})
+        return search_matches
+```
+
+
+
 ## String metric
 
 The custom string metric algorithm was created in order to have as much flexibility as possible when choosing the criteria for string similarity depending on the project and input. The basis for the creation of the custom metric was that the paper ["A Comparison of String Distance Metrics for Name-Matching Tasks"](https://www.cs.cmu.edu/~wcohen/postscript/ijcai-ws-2003.pdf) concluded the best-performing metric was a 'hybrid method' composed of multiple distances.
