@@ -340,6 +340,20 @@ https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
 #Co -> Co.
 #EMP -> Employee
 #(CPLP) could be a COFI thing, the only ending I am unsure about
-dba -  doing business as: only include strings after this keyword oa - operating assests: only include strings after this keyword alberta ltd: only include strings after this keyword - a bit tricky ASK &: turn into 'and' ASK why oa - operating assests: everything before as well? See allpipe services oa 1041084 alberta ASK ltd ma - remove this string inc po - remove this string ulc - keeping it for now but I will ASK inc qc po - remove this string lp - keeping for now inc ma - remove this string llp - keeping for now "a div of" - keep for now a division of - keep for now svs keep for now div uap - keep for now ASK ltd rock oa - operating assests: remove itself and everything afterwards ltd glenn carlson' - keeping it for now ASK ltd 114027 alberta - removing everything after 'ltd' ASK corp po - keeping for now ASK ab ltd - only strings after this keyword
+dba -  doing business as: only include strings after this keyword 
+oa - operating assests: only include strings after this keyword 
+alberta ltd: only include strings after this keyword - a bit tricky ASK 
+&: turn into 'and' 
+oa - operating assests: everything before as well? See allpipe services oa 1041084 alberta ASK 
+ltd ma - remove this string inc po - remove this string 
+ulc - keeping it for now but 
+inc qc po - remove this string lp - keeping for now 
+inc ma - remove this string 
+llp - keeping for now 
+"a div of" - keep for now a division of - keep for now svs keep for now 
+div uap - keep for now ASK 
+ltd rock oa - operating assests: remove itself and everything afterwards 
+ltd glenn carlson' - keeping it for now ASK ltd 114027 alberta - removing everything after 'ltd' ASK c
+orp po - keeping for now ASK ab ltd - only strings after this keyword
 #--------------------------------------------------------------------------
 
